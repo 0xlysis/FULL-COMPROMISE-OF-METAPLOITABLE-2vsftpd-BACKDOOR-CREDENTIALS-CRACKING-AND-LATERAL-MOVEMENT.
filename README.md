@@ -4,8 +4,8 @@
 
 From zero to root: chaining a legacy backdoor, offline credential cracking, and lateral movement against an intentionally vulnerable target.
 
-Author: Lysis
-Date: 6th October
+Author: 0xLysis
+Date: 6th October 2026
 Environment: Isolated home lab (VirtualBox)
 Target: Metasploitable 2 — 192.168.56.102
 Attacker: Kali Linux — 192.168.56.101
