@@ -1,51 +1,51 @@
 # FULL-COMPROMISE-OF-METAPLOITABLE-2vsftpd-BACKDOOR-CREDENTIALS-CRACKING-AND-LATERAL-MOVEMENT.
 
- Metasploitable 2 — Full Compromise Walkthrough
-
 From zero to root: chaining a legacy backdoor, offline credential cracking, and lateral movement against an intentionally vulnerable target.
 
-Author: 0xLysis
-Date: 6th October 2026
-Environment: Isolated home lab (VirtualBox)
-Target: Metasploitable 2 — 192.168.56.102
-Attacker: Kali Linux — 192.168.56.101
+**Author:** 0xLysis
+**Date:** 6th October 2026
+**Environment:** Isolated home lab (VirtualBox)
+**Target:** Metasploitable 2 — 192.168.56.102
+**Attacker:** Kali Linux — 192.168.56.101
 
 ---
 
-📌 TL;DR
+## 📌 TL;DR
 
-Phase Result
-Recon 7+ services identified
-Initial Access Root shell via vsftpd 2.3.4 backdoor
-Credential Access /etc/shadow cracked with John
-Lateral Movement SSH login as msfadmin
-Final Impact Full system compromise
+| Phase | Result |
+|-------|--------|
+| Recon | 7+ services identified |
+| Initial Access | Root shell via vsftpd 2.3.4 backdoor |
+| Credential Access | /etc/shadow cracked with John |
+| Lateral Movement | SSH login as msfadmin |
+| Final Impact | Full system compromise |
 
-Time to root: under 10 minutes.
+**Time to root:** under 10 minutes.
 
 ---
 
-1. Executive Summary
+## 1. Executive Summary
 
 A full penetration test was performed against a Metasploitable 2 host to simulate a real-world attack against an unpatched legacy server. The engagement achieved complete compromise — from unauthenticated remote code execution to valid user credentials to a working SSH foothold — without triggering any defensive controls.
 
 The attack required no custom tooling. Every step used publicly available, industry-standard utilities (nmap, netcat, john, ssh). This demonstrates how quickly an outdated service with a known backdoor can lead to full environment compromise.
 
-Risk rating: 🔴 Critical
+**Risk rating: 🔴 Critical**
 
 ---
 
-2. Scope & Environment
+## 2. Scope & Environment
 
-Role Host IP
-Attacker Kali Linux 192.168.56.101
-Target Metasploitable 2 192.168.56.102
+| Role | Host | IP |
+|------|------|-----|
+| Attacker | Kali Linux | 192.168.56.101 |
+| Target | Metasploitable 2 | 192.168.56.102 |
 
 Network: isolated VirtualBox host-only network. No external systems affected.
 
 ---
 
-3. Reconnaissance
+## 3. Reconnaissance
 
 ```bash
 nmap -sV -sC -p- 192.168.56.102
@@ -54,7 +54,7 @@ nmap -sV -sC -p- 192.168.56.102
 Services discovered:
 
 Port Service Version Notes
-21 FTP vsftpd 2.3.4 ⚠️ Known backdoor
+21 FTP vsftpd 2.3.4 Known backdoor
 22 SSH OpenSSH 4.7p1 Legacy crypto
 80 HTTP Apache 2.2.8 EOL
 139/445 SMB Samba 3.x Multiple CVEs
@@ -91,8 +91,6 @@ whoami
 ```
 
 Result: Unauthenticated remote code execution as root. No exploit code required.
-
-💡 The Metasploit module works too, but the manual nc method is more reliable — a known quirk of this legacy service.
 
 ---
 
@@ -140,20 +138,20 @@ Result: Interactive shell as a valid user — proving the cracked credentials ar
 
 ```
 nmap scan
-    │
-    ▼
+    |
+    v
 vsftpd 2.3.4 identified
-    │
-    ▼
-Backdoor triggered → ROOT shell
-    │
-    ▼
-/etc/shadow dumped → John → plaintext creds
-    │
-    ▼
-SSH login as msfadmin → lateral movement
-    │
-    ▼
+    |
+    v
+Backdoor triggered -> ROOT shell
+    |
+    v
+/etc/shadow dumped -> John -> plaintext creds
+    |
+    v
+SSH login as msfadmin -> lateral movement
+    |
+    v
 FULL COMPROMISE
 ```
 
@@ -162,10 +160,10 @@ FULL COMPROMISE
 8. Findings
 
 # Finding Severity CVE
-1 vsftpd 2.3.4 backdoor 🔴 Critical CVE-2011-2523
-2 Weak password hashing (MD5crypt) 🟠 High —
-3 Credential reuse across services 🟠 High —
-4 End-of-life software (Apache, Samba, MySQL, Tomcat) 🟠 High Multiple
+1 vsftpd 2.3.4 backdoor Critical CVE-2011-2523
+2 Weak password hashing (MD5crypt) High —
+3 Credential reuse across services High —
+4 End-of-life software (Apache, Samba, MySQL, Tomcat) High Multiple
 
 ---
 
@@ -176,7 +174,7 @@ FULL COMPROMISE
 3. Eliminate credential reuse — unique credentials per service.
 4. Disable legacy SSH algorithms; enforce key-based auth.
 5. Decommission EOL software and apply a patch management cycle.
-6. Network segmentation + monitoring to detect lateral movement.
+6. Network segmentation and monitoring to detect lateral movement.
 
 ---
 
@@ -191,7 +189,7 @@ FULL COMPROMISE
 
 🧰 Tools & Techniques Used
 
-nmap · netcat · searchsploit · john the ripper · unshadow · ssh · kali-tweaks · CVE research · offline hash cracking · lateral movement
+nmap, netcat, searchsploit, john the ripper, unshadow, ssh, kali-tweaks, CVE research, offline hash cracking, lateral movement
 
 ---
 
